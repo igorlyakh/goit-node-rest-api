@@ -1,9 +1,9 @@
-const contactsService = require('../services/contactsServices.js');
+const Contact = require('../models/contacts.js');
 const HttpError = require('../helpers/HttpError.js');
 
 const getAllContacts = async (req, res) => {
   try {
-    const result = await contactsService.getAll();
+    const result = await Contact.find();
     res.json(result);
   } catch {
     res.status(500).json({
@@ -15,7 +15,7 @@ const getAllContacts = async (req, res) => {
 const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await contactsService.getById(id);
+    const result = await Contact.findById(id);
     if (!result) {
       throw HttpError(404, 'Not found!');
     }
@@ -28,7 +28,7 @@ const getOneContact = async (req, res, next) => {
 const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await contactsService.removeContact(id);
+    const result = await Contact.findByIdAndDelete(id);
     if (!result) {
       throw HttpError(404, 'Not found!');
     }
@@ -40,7 +40,7 @@ const deleteContact = async (req, res, next) => {
 
 const createContact = async (req, res, next) => {
   try {
-    const result = await contactsService.addContact(req.body);
+    const result = await Contact.create(req.body);
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -50,7 +50,20 @@ const createContact = async (req, res, next) => {
 const updateContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await contactsService.updateContact(id, req.body);
+    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+    if (!result) {
+      throw HttpError(404, 'Not found!');
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateFavorite = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
     if (!result) {
       throw HttpError(404, 'Not found!');
     }
@@ -66,4 +79,5 @@ module.exports = {
   deleteContact,
   createContact,
   updateContact,
+  updateFavorite,
 };
