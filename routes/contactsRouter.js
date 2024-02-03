@@ -1,5 +1,5 @@
 const express = require('express');
-const isValidId = require('../helpers/isValidId.js');
+const { isValidId, validateBody } = require('../helpers');
 
 const {
   getAllContacts,
@@ -9,7 +9,6 @@ const {
   updateContact,
   updateFavorite,
 } = require('../controllers/contactsControllers.js');
-const validateBody = require('../helpers/validateBody.js');
 const {
   createContactSchema,
   updateContactSchema,

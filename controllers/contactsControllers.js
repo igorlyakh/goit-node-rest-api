@@ -1,5 +1,5 @@
-const Contact = require('../models/contacts.js');
-const HttpError = require('../helpers/HttpError.js');
+const { Contact } = require('../models');
+const { HttpError } = require('../helpers');
 
 const getAllContacts = async (req, res) => {
   try {
