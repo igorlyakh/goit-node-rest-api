@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { HttpError } = require('../helpers');
+const { JWT_SECRET } = process.env;
 
 const registrationUser = async (req, res, next) => {
   try {
@@ -33,9 +34,10 @@ const loginUser = async (req, res, next) => {
       throw HttpError(401, 'Wrong email or password.');
     }
     const payload = { id: user._id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    const token = jwt.sign(payload, JWT_SECRET, {
       expiresIn: '30d',
     });
+    await User.findByIdAndUpdate(user._id, { token });
     res.status(200).json({
       email: user.email,
       subscription: user.subscription,
@@ -46,7 +48,29 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+const logout = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    await User.findByIdAndUpdate(_id, { token: null });
+    res.status(204).json();
+  } catch (error) {
+    next(error);
+  }
+};
+
+const current = async (req, res, next) => {
+  try {
+    console.log('work!');
+    const { email, subscription } = req.user;
+    res.json({ email, subscription });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registrationUser,
   loginUser,
+  logout,
+  current,
 };
