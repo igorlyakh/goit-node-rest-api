@@ -60,7 +60,6 @@ const logout = async (req, res, next) => {
 
 const current = async (req, res, next) => {
   try {
-    console.log('work!');
     const { email, subscription } = req.user;
     res.json({ email, subscription });
   } catch (error) {
