@@ -5,4 +5,8 @@ const userSchema = Joi.object({
   email: Joi.string().required(),
 });
 
-module.exports = userSchema;
+const resendVerify = Joi.object({
+  email: Joi.string().required(),
+});
+
+module.exports = { userSchema, resendVerify };

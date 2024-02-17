@@ -6,14 +6,18 @@ const {
   logout,
   current,
   updateAvatar,
+  verifyUser,
+  resendMail,
 } = require('../controllers/usersControllers');
 const { validateBody, isValidToken } = require('../helpers');
-const userSchema = require('../schemas/usersSchema');
+const { userSchema, resendVerify } = require('../schemas/usersSchema');
 
 const usersRouter = express.Router();
 
 usersRouter.post('/registration', validateBody(userSchema), registrationUser);
 usersRouter.post('/login', validateBody(userSchema), loginUser);
+usersRouter.get('/verify/:verifyToken', verifyUser);
+usersRouter.post('/verify', validateBody(resendVerify), resendMail);
 usersRouter.post('/logout', isValidToken, logout);
 usersRouter.get('/current', isValidToken, current);
 usersRouter.patch(
