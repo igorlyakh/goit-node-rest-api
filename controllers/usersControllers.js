@@ -7,7 +7,6 @@ const fs = require('fs/promises');
 const { User } = require('../models');
 const { HttpError, sendMail } = require('../helpers');
 const { nanoid } = require('nanoid');
-const { ref } = require('joi');
 const { JWT_SECRET, BASE_URL } = process.env;
 
 const publicPath = path.join(__dirname, '../', 'public', 'avatars');
